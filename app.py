@@ -1,4 +1,5 @@
 import os
+import random, string
 from flask import Flask, request, jsonify, make_response, send_from_directory
 from flask_restful import Resource, Api, reqparse
 from flask_cors import CORS, cross_origin
@@ -46,20 +47,30 @@ api = Api(app)
 COOKIE_NAME = 'coookie'
 
 class CookieTest(Resource):
-	# @cross_origin(origins="http://localhost:3000", supports_credentials=True)
+	# @cross_origin(origins="http://localhost:3000", supports_credentials=True) #會覆蓋痊癒配置所以不用
 	def get(self):
 		request_cookie = request.cookies.get(COOKIE_NAME)
-		response_body = {'Message': request_cookie}
+		response_body = {'Message': f'Cookie in request header is: {request_cookie}'}
 		print('request_cookie:', request_cookie)
 
+		new_value = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(4))
 		response = jsonify(response_body)
 		response.set_cookie(
-			COOKIE_NAME, 'this_is_your_token', 
+			COOKIE_NAME, f'your_token_{new_value}', 
 			domain="setcookie-backend.herokuapp.com", 
 			path='/', 
 			max_age=600,
 			secure=True, 
 			httponly=True,
+			samesite="None"
+		)
+		response.set_cookie(
+			'normal_cookie', new_value,
+			domain="setcookie-backend.herokuapp.com", 
+			path='/', 
+			max_age=600,
+			secure=True, 
+			httponly=False, # 讓 js 可以存取
 			samesite="None"
 		)
 		return response
