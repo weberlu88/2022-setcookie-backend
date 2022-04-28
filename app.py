@@ -46,7 +46,7 @@ api = Api(app)
 COOKIE_NAME = 'coookie'
 
 class CookieTest(Resource):
-	@cross_origin(origins="http://localhost:3000", supports_credentials=True)
+	# @cross_origin(origins="http://localhost:3000", supports_credentials=True)
 	def get(self):
 		request_cookie = request.cookies.get(COOKIE_NAME)
 		response_body = {'Message': request_cookie}
