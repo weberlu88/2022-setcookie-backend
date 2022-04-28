@@ -1,0 +1,6 @@
+flask
+flask-restful
+flask_cors
+flask-jwt-extended
+pyOpenSSL
+gunicorn
